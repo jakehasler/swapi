@@ -46,7 +46,7 @@
 
 	import angular from 'angular';
 	import registerControllers from './controllers';
-	const ngModule = angular.module('DateHatcher', []);
+	const ngModule = angular.module('Swapi', []);
 	registerControllers(ngModule);
 	__webpack_require__(1);
 

@@ -1,5 +1,5 @@
 import angular from 'angular';
 import registerControllers from './controllers';
-const ngModule = angular.module('DateHatcher', []);
+const ngModule = angular.module('Swapi', []);
 registerControllers(ngModule);
 require('../less/skeleton.less');

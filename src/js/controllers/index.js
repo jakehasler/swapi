@@ -1,6 +1,6 @@
 export default ngModule => {
 	ngModule.controller('MainCtrl', function($log) {
-		this.title = 'This is the analyticsCtrl title';
+		this.title = 'This is the SwapiCtrl title';
 
 	})
 }
