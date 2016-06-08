@@ -1,23 +1,17 @@
 // DEPS ==========================
-var express = require('express');
-var app = express();
-var path = require('path');
-var fs = require('fs');
-var logger = require('morgan');
-var mongoose = require('mongoose');
+'use strict';
+const express = require('express');
+const app = express();
+const path = require('path');
+const fs = require('fs');
+const logger = require('morgan');
+const mongoose = require('mongoose');
 require('dotenv').config();
-var debug = require('debug')('app');
-var blog = require('./routes/blog')
-var api = require('./routes/api')
-
-// HOME PAGE =======================
-app.get('/', function (req, res) {
-	var obj = { title: 'Welcome to Jakespress!'};
-	res.render('index.ejs', obj);
-});
+const debug = require('debug')('app');
+const routes = require('./routes/index');
 
 // ROUTES ==========================
-app.use('/api', api);
+app.use('/', routes);
 
 // VIEWS ===========================
 app.set('views', path.join(__dirname, 'public'));
@@ -39,8 +33,8 @@ app.use(function(req, res, next) {
 
 
 // SERVER ==========================
-app.listen(3500, function() {
-  console.log('Jakespress is listening on port 3500!');
+app.listen(4000, function() {
+  console.log('Swapi is listening on port 4000!');
 });
 
 
