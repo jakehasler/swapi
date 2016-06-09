@@ -15,6 +15,7 @@ router.get('/character/:name', function(req, res) {
 	let name = req.params.name;
 	// TODO: Send these responses back to the EJS Page.
 	if(name) {
+		name = name.toLowerCase();
 		switch(name) {
 			case 'luke': 
 				var nameRes = swapiMachine.getNameById('1');
