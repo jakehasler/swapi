@@ -1,7 +1,7 @@
 {
-  "name": "jakespress",
+  "name": "Swapi",
   "version": "1.0.0",
-  "description": "Express + Webpack Boilerplate",
+  "description": "Star Wars API Integrations.",
   "main": "index.js",
   "scripts": {
     "webpack": "webpack",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git clone https://jakehasler@github.org/jakehasler/jakespress.git"
+    "url": "git clone https://github.com/jakehasler/swapi.git"
   },
   "author": "Jake Hasler",
   "license": "ISC",

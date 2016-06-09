@@ -1,6 +1,7 @@
 'use strict';
 const axios = require('axios');
 const Promise = require('promise');
+const ProgressBar = require('progress');
 const baseUrl = 'http://swapi.co';
 const format = '?format=json';
 
@@ -68,8 +69,10 @@ swapiMachine.getPlanetResidents = () => {
 	let currPlanet = {};
 	var residentNames = [];
 	let resIndex = 0;
+	var bar;
 	return new Promise(function(fulfill, reject) {
 		console.log('Getting all planets....');
+
 		function getPlanetData(url, getCharactersForPlanets) {
 			axios.get(url).then(data => {
 				let res = data.data;
@@ -83,6 +86,12 @@ swapiMachine.getPlanetResidents = () => {
 				} else {
 					console.log('Getting Characters for Each Planet...');
 					currPlanet = planets[planetIndex];
+					bar = new ProgressBar('  Processing [:bar] :percent :etas', {
+						complete: '=',
+						incomplete: ' ',
+						width: 50,
+						total: planets.length
+					});
 					getCharactersForPlanets(doneWithResidents);
 				}
 			}, err => {
@@ -98,16 +107,13 @@ swapiMachine.getPlanetResidents = () => {
 				axios.get(residentUrls[resIndex]).then(data => {
 					let res = data.data;
 					if(res.name) {
-						//console.log('Ind: ' + resIndex + ' with name: ' + res.name);
 						residentNames.push(res.name);
 					}
 					if(resIndex < residentUrls.length - 1) {
 						resIndex++;
 						getCharactersForPlanets(doneWithResidents)
 					} else if(resIndex == residentUrls.length - 1) {
-						//console.log('Done with residents for: ' currPlanet.name);
 						currPlanet.residentNames = residentNames;
-						console.log('***' + currPlanet.name + ' Residents Finished!');
 						doneWithResidents();
 					}
 				}, err => {
@@ -120,7 +126,8 @@ swapiMachine.getPlanetResidents = () => {
 
 		function doneWithResidents() {
 			if(planetIndex < planets.length - 1) {
-				console.log('Moving on to next planet...' + (planetIndex + 1) + '/' + planets.length);
+				//console.log('Moving on to next planet...' + (planetIndex + 1) + '/' + planets.length);
+				bar.tick();
 				planetIndex++;
 				currPlanet = planets[planetIndex];
 				residentNames = [];
@@ -129,6 +136,8 @@ swapiMachine.getPlanetResidents = () => {
 			} else {
 				// Build newPlanet Object
 				let newPlanets = {};
+				bar.tick();
+				console.log();
 				console.log('Finished Processing Planets!');
 				// Finishing up Total Request
 				planets.forEach(planet => {
