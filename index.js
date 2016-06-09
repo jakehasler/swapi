@@ -6,7 +6,6 @@ const path = require('path');
 const fs = require('fs');
 const logger = require('morgan');
 const mongoose = require('mongoose');
-require('dotenv').config();
 const debug = require('debug')('app');
 const routes = require('./routes/index');
 
