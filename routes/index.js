@@ -58,14 +58,15 @@ router.get('/characters', function(req, res) {
 			res.json(characters);
 		}
 		else if(sortVal == 'name' || sortVal == 'mass' || sortVal == 'height') {
+			console.log('Sorting results by: ' + sortVal);
 			characters.sort(function(a,b){
 			  return (b[sortVal] - a[sortVal]);
 			});
+			res.json(characters);
 		} else {
 			res.json({error: 'Invalid sort value provided'});
 		}
 	})
-	
 });
 
 // ALL RESIDENTS PF PLANETS ===========

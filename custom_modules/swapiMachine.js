@@ -26,11 +26,11 @@ swapiMachine.getCharacters = () => {
 	let characters = [];
 	return new Promise((fulfill, reject) => {
 		
-		function getPagedData(url, done) {
+		function getCharacterData(url, done) {
 			axios.get(url).then(data => {
 				console.log('Data Retrieved');
-				var res = data.data;
-				var nextUrl = res.next;
+				let res = data.data;
+				let nextUrl = res.next;
 				res.results.forEach(character => {
 					if(characters.length < 50) {
 						characters.push(character);
@@ -38,9 +38,10 @@ swapiMachine.getCharacters = () => {
 						done(characters);
 					}
 				});
+				// calls itself until there are 50 characters in the array
 				if(nextUrl && characters.length < 50) {
 					console.log('Making next call on: ' + nextUrl);
-					getPagedData(nextUrl, done);
+					getCharacterData(nextUrl, done);
 				} else {
 					done(characters);
 				}
@@ -49,11 +50,12 @@ swapiMachine.getCharacters = () => {
 			})
 		}
 
+		// Callback for success case
 		function done(characters) {
 			fulfill(characters);
 		}
 
-		getPagedData(baseUrl + totalPath, done);
+		getCharacterData(baseUrl + totalPath, done);
 
 	})
 }
@@ -61,26 +63,82 @@ swapiMachine.getCharacters = () => {
 swapiMachine.getPlanetResidents = () => {
 	const path = '/api/planets/';
 	let totalPath = path + format;
+	let planets = [];
+	let planetIndex = 0;
+	let currPlanet = {};
+	var residentNames = [];
+	let resIndex = 0;
 	return new Promise(function(fulfill, reject) {
-		console.log('totalUrl: ' + baseUrl + totalPath);
-		axios.get(baseUrl + totalPath).then(data => {
-			console.log('Data Retrieved for Planets!');
-			fulfill(data.data);
-		}, err => {
-			reject(err.data);
-		})
-	})
-}
+		console.log('Getting all planets....');
+		function getPlanetData(url, getCharactersForPlanets) {
+			axios.get(url).then(data => {
+				let res = data.data;
+				let nextUrl = res.next;
+				res.results.forEach(planet => {
+					planets.push(planet);
+				});
+				// calls itself until there are all planets are in the array
+				if(nextUrl) {
+					getPlanetData(nextUrl, getCharactersForPlanets);
+				} else {
+					console.log('Getting Characters for Each Planet...');
+					currPlanet = planets[planetIndex];
+					getCharactersForPlanets(doneWithResidents);
+				}
+			}, err => {
+				reject(err.data);
+			})
+		}
+		
+		function getCharactersForPlanets(doneWithResidents) {
+			var residentUrls = currPlanet.residents;
+			//console.log('ResidentURLs.length: ', residentUrls.length);
+			//console.log(residentUrls[resIndex]);
+			if(residentUrls[resIndex]) {
+				axios.get(residentUrls[resIndex]).then(data => {
+					let res = data.data;
+					if(res.name) {
+						//console.log('Ind: ' + resIndex + ' with name: ' + res.name);
+						residentNames.push(res.name);
+					}
+					if(resIndex < residentUrls.length - 1) {
+						resIndex++;
+						getCharactersForPlanets(doneWithResidents)
+					} else if(resIndex == residentUrls.length - 1) {
+						//console.log('Done with residents for: ' currPlanet.name);
+						currPlanet.residentNames = residentNames;
+						console.log('***' + currPlanet.name + ' Residents Finished!');
+						doneWithResidents();
+					}
+				}, err => {
+					reject(err.data);
+				})
+			} else {
+				doneWithResidents();
+			}
+		}
 
-function makeRequest(url) {
-	console.log('Making request on: ' + url);
-	return new Promise((fulfill, reject) => {
-		axios.get(url).then(data => {
-			console.log('Data Retrieved');
-			fulfill(data.data);
-		}, err => {
-			reject(err.data);
-		})
+		function doneWithResidents() {
+			if(planetIndex < planets.length - 1) {
+				console.log('Moving on to next planet...' + (planetIndex + 1) + '/' + planets.length);
+				planetIndex++;
+				currPlanet = planets[planetIndex];
+				residentNames = [];
+				resIndex = 0;
+				getCharactersForPlanets(doneWithResidents);
+			} else {
+				// Build newPlanet Object
+				let newPlanets = {};
+				console.log('Finished Processing Planets!');
+				// Finishing up Total Request
+				planets.forEach(planet => {
+					newPlanets[planet.name] = planet.residentNames;
+				});
+				fulfill(newPlanets);
+			}
+		}
+
+		getPlanetData(baseUrl + totalPath, getCharactersForPlanets);
 	})
 }
 
