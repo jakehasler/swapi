@@ -71,12 +71,15 @@ router.get('/characters', function(req, res) {
 
 // ALL RESIDENTS PF PLANETS ===========
 router.get('/planetresidents', function(req, res) {
-	let planets = {
-		planetName1: ['CharacterName1', 'CharacterName2'],
-		planetName2: ['CharacterName3']
-	}
+	// let planets = {
+	// 	planetName1: ['CharacterName1', 'CharacterName2'],
+	// 	planetName2: ['CharacterName3']
+	// }
 
-	res.send(planets);
+	let planetData = swapiMachine.getPlanetResidents();
+	planetData.then(planets => {
+		res.json(planets);
+	});
 });
 
 

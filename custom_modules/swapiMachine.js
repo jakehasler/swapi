@@ -37,12 +37,12 @@ swapiMachine.getCharacters = () => {
 }
 
 swapiMachine.getPlanetResidents = () => {
-	const path = '/api/people/';
-	let totalPath = path + characterId + format;
+	const path = '/api/planets/';
+	let totalPath = path + format;
 	return new Promise(function(fulfill, reject) {
 		console.log('totalUrl: ' + baseUrl + totalPath);
 		axios.get(baseUrl + totalPath).then(data => {
-			console.log('Data Retrieved for: ' + data.data.name);
+			console.log('Data Retrieved for Planets!');
 			fulfill(data.data);
 		}, err => {
 			reject(err.data);
