@@ -1,6 +1,7 @@
 'use strict';
 const express = require('express');
 let router = express.Router();
+let swapiMachine = require('../custom_modules/swapiMachine');
 
 
 // HOME PAGE =========================
@@ -16,22 +17,30 @@ router.get('/character/:name', function(req, res) {
 	if(name) {
 		switch(name) {
 			case 'luke': 
-				console.log('luke');
-				res.json({name: 'Luke'});
+				var nameRes = swapiMachine.getNameById('1');
+				nameRes.then(nameData => {
+					res.json(nameData);
+				});
 				break;
 			case 'han': 
-				console.log('han');
-				res.json({name: 'Han'});
+				var nameRes = swapiMachine.getNameById('14');
+				nameRes.then(nameData => {
+					res.json(nameData);
+				});
 				break;
 			case 'leia': 
-				console.log('leia');
-				res.json({name: 'Leia'});
+				var nameRes = swapiMachine.getNameById('5');
+				nameRes.then(nameData => {
+					res.json(nameData);
+				});
 				break;
 			case 'rey': 
-				console.log('rey');
-				res.json({name: 'Rey'});
+				var nameRes = swapiMachine.getNameById('85');
+				nameRes.then(nameData => {
+					res.json(nameData);
+				});
 				break;
-			default: res.status(400).json({ error:'Sorry, Not a valid name!' }); 
+			default: res.status(400).send({ error:'Sorry, Not a valid name!' }); 
 		}
 	}
 });
