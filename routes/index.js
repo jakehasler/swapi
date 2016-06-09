@@ -50,20 +50,23 @@ router.get('/character/:name', function(req, res) {
 router.get('/characters', function(req, res) {
 	// Must be able to be sorted by name, mass, or height.
 	let sortVal = req.query.sort;
-	let characters = ['test1','test2','test3'];
+	// let characters = ['test1','test2','test3'];
 
-	// HTTP Call here for the characters. 
+	// HTTP Call here for the characters.
+	let charData = swapiMachine.getCharacters();
+	charData.then(characters => {
+		if(!sortVal) {
+			res.json(characters);
+		}
+		else if(sortVal == 'name' || sortVal == 'mass' || sortVal == 'height') {
+			characters.sort(function(a,b){
+			  return (b[sortVal] - a[sortVal]);
+			});
+		} else {
+			res.json({error: 'Invalid sort value provided'});
+		}
+	})
 	
-	if(!sortVal) {
-		res.json(characters);
-	}
-	else if(sortVal == 'name' || sortVal == 'mass' || sortVal == 'height') {
-		characters.sort(function(a,b){
-		  return (b[sortVal] - a[sortVal]);
-		});
-	} else {
-		res.json({error: 'Invalid sort value provided'});
-	}
 });
 
 // ALL RESIDENTS PF PLANETS ===========
