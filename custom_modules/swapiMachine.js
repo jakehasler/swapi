@@ -11,7 +11,7 @@ swapiMachine.getNameById = (characterId) => {
 	const path = '/api/people/';
 	let totalPath = path + characterId + format;
 	return new Promise((fulfill, reject) => {
-		console.log('totalUrl: ' + baseUrl + totalPath);
+		console.log('Getting Character...');
 		axios.get(baseUrl + totalPath).then(data => {
 			console.log('Data Retrieved for: ' + data.data.name);
 			fulfill(data.data);
