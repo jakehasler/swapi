@@ -5,11 +5,10 @@
   "main": "index.js",
   "scripts": {
     "webpack": "webpack",
-    "prestart": "npm run webpack && cp src/index.ejs public/index.ejs",
     "dev": "node node_modules/.bin/webpack-dev-server --content-base public --inline",
     "start": "node index.js",
     "debug": "DEBUG=app npm start",
-    "build": "NODE_ENV=production npm run webpack && cp src/index.html public/index.html",
+    "build": "NODE_ENV=production npm run webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

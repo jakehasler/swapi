@@ -19,25 +19,25 @@ router.get('/character/:name', function(req, res) {
 			case 'luke': 
 				var nameRes = swapiMachine.getNameById('1');
 				nameRes.then(nameData => {
-					res.json(nameData);
+					res.render('character.ejs', nameData);
 				});
 				break;
 			case 'han': 
 				var nameRes = swapiMachine.getNameById('14');
 				nameRes.then(nameData => {
-					res.json(nameData);
+					res.render('character.ejs', nameData);
 				});
 				break;
 			case 'leia': 
 				var nameRes = swapiMachine.getNameById('5');
 				nameRes.then(nameData => {
-					res.json(nameData);
+					res.render('character.ejs', nameData);
 				});
 				break;
 			case 'rey': 
 				var nameRes = swapiMachine.getNameById('85');
 				nameRes.then(nameData => {
-					res.json(nameData);
+					res.render('character.ejs', nameData);
 				});
 				break;
 			default: res.status(400).send({ error:'Sorry, Not a valid name!' }); 
@@ -59,9 +59,15 @@ router.get('/characters', function(req, res) {
 		}
 		else if(sortVal == 'name' || sortVal == 'mass' || sortVal == 'height') {
 			console.log('Sorting results by: ' + sortVal);
-			characters.sort(function(a,b){
-			  return (b[sortVal] - a[sortVal]);
-			});
+			if(sortVal == 'name') {
+				characters.sort(function(a,b) {
+					return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);
+				}); 
+			} else {
+				characters.sort(function(a,b){
+				  return (a[sortVal] - b[sortVal]);
+				});
+			}
 			res.json(characters);
 		} else {
 			res.json({error: 'Invalid sort value provided'});

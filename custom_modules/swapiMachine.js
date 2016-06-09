@@ -26,10 +26,9 @@ swapiMachine.getCharacters = () => {
 	let totalPath = path + format;
 	let characters = [];
 	return new Promise((fulfill, reject) => {
-		
+		console.log('Getting Characters....');
 		function getCharacterData(url, done) {
 			axios.get(url).then(data => {
-				console.log('Data Retrieved');
 				let res = data.data;
 				let nextUrl = res.next;
 				res.results.forEach(character => {
@@ -41,7 +40,6 @@ swapiMachine.getCharacters = () => {
 				});
 				// calls itself until there are 50 characters in the array
 				if(nextUrl && characters.length < 50) {
-					console.log('Making next call on: ' + nextUrl);
 					getCharacterData(nextUrl, done);
 				} else {
 					done(characters);
@@ -53,6 +51,7 @@ swapiMachine.getCharacters = () => {
 
 		// Callback for success case
 		function done(characters) {
+			console.log('Finished!');
 			fulfill(characters);
 		}
 
@@ -67,8 +66,8 @@ swapiMachine.getPlanetResidents = () => {
 	let planets = [];
 	let planetIndex = 0;
 	let currPlanet = {};
-	var residentNames = [];
 	let resIndex = 0;
+	var residentNames = [];
 	var bar;
 	return new Promise(function(fulfill, reject) {
 		console.log('Getting all planets....');
