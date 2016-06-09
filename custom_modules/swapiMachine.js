@@ -27,6 +27,7 @@ swapiMachine.getCharacters = () => {
 	let characters = [];
 	return new Promise((fulfill, reject) => {
 		console.log('Getting Characters....');
+		// Recursively goes through each page until all 50 characters have been accounted for.
 		function getCharacterData(url, done) {
 			axios.get(url).then(data => {
 				let res = data.data;
@@ -49,14 +50,13 @@ swapiMachine.getCharacters = () => {
 			})
 		}
 
-		// Callback for success case
+		// Callback when 50 characters have been reached. 
 		function done(characters) {
 			console.log('Finished!');
 			fulfill(characters);
 		}
 
 		getCharacterData(baseUrl + totalPath, done);
-
 	})
 }
 
@@ -98,6 +98,8 @@ swapiMachine.getPlanetResidents = () => {
 			})
 		}
 		
+		// Callback after planets are finished
+		// Recursively Goes through each of the arrays for the planet at the current index.
 		function getCharactersForPlanets(doneWithResidents) {
 			var residentUrls = currPlanet.residents;
 			//console.log('ResidentURLs.length: ', residentUrls.length);
@@ -123,6 +125,7 @@ swapiMachine.getPlanetResidents = () => {
 			}
 		}
 
+		// Callback to check planet status
 		function doneWithResidents() {
 			if(planetIndex < planets.length - 1) {
 				//console.log('Moving on to next planet...' + (planetIndex + 1) + '/' + planets.length);
@@ -146,6 +149,7 @@ swapiMachine.getPlanetResidents = () => {
 			}
 		}
 
+		// Initiating the process
 		getPlanetData(baseUrl + totalPath, getCharactersForPlanets);
 	})
 }
