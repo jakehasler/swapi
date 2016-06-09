@@ -13,7 +13,7 @@ router.get('/', function (req, res) {
 // SINGLE CHARACTER BY NAME ==========
 router.get('/character/:name', function(req, res) {
 	let name = req.params.name;
-
+	// TODO: Send these responses back to the EJS Page.
 	if(name) {
 		switch(name) {
 			case 'luke': 
@@ -42,7 +42,7 @@ router.get('/character/:name', function(req, res) {
 				break;
 			default: res.status(400).send({ error:'Sorry, Not a valid name!' }); 
 		}
-	}
+	} else res.status(400).send({ error:'Sorry, No name provided!' });
 });
 
 
@@ -50,7 +50,6 @@ router.get('/character/:name', function(req, res) {
 router.get('/characters', function(req, res) {
 	// Must be able to be sorted by name, mass, or height.
 	let sortVal = req.query.sort;
-	// let characters = ['test1','test2','test3'];
 
 	// HTTP Call here for the characters.
 	let charData = swapiMachine.getCharacters();
@@ -71,10 +70,10 @@ router.get('/characters', function(req, res) {
 
 // ALL RESIDENTS PF PLANETS ===========
 router.get('/planetresidents', function(req, res) {
-	// let planets = {
-	// 	planetName1: ['CharacterName1', 'CharacterName2'],
-	// 	planetName2: ['CharacterName3']
-	// }
+	let planetSchema = {
+		planetName1: ['CharacterName1', 'CharacterName2'],
+		planetName2: ['CharacterName3']
+	}
 
 	let planetData = swapiMachine.getPlanetResidents();
 	planetData.then(planets => {
